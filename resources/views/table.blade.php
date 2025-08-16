@@ -15,7 +15,7 @@
             <th style="width:18%">Phone</th>
             <th style="width:24%">Email</th>
             <th style="width:18%">Nationality</th>
-            <th style="width:12%" class="text-center">Aksi</th>
+            <th style="width:30%" class="text-center">Aksi</th>
           </tr>
         </thead>
         <tbody>
@@ -35,13 +35,28 @@
                 </span>
               </td>
               <td class="text-center">
-                <button type="button"
-                        class="btn btn-sm btn-outline-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#familyModal{{ $cust->id }}">
-                  Detail
-                </button>
+                  <!-- Tombol Detail -->
+                  <button type="button"
+                          class="btn btn-sm btn-outline-primary me-1"
+                          data-bs-toggle="modal"
+                          data-bs-target="#familyModal{{ $cust->id }}"
+                          title="Detail">
+                      <i class="bi bi-eye"></i>
+                  </button>
+
+                  <!-- Tombol Delete -->
+                  <form action="{{ route('customers.destroy', $cust->id) }}" 
+                        method="POST" 
+                        class="d-inline"
+                        onsubmit="return confirm('Yakin mau hapus data ini?')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                      </button>
+                  </form>
               </td>
+
             </tr>
           @empty
             <tr>
@@ -86,6 +101,7 @@
                   <tr>
                     <th style="width:60%">Nama</th>
                     <th style="width:40%">Tanggal Lahir</th>
+                    <th style="width:40%">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -93,6 +109,19 @@
                     <tr>
                       <td>{{ $fam->name }}</td>
                       <td>{{ \Carbon\Carbon::parse($fam->dob)->format('d/m/Y') }}</td>
+                      <td>
+                        <form action="{{ route('families.destroy', [$cust->id, $fam->id]) }}" 
+                              method="POST" 
+                              class="d-inline"
+                              onsubmit="return confirm('Yakin mau hapus data ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                      </td>
+
                     </tr>
                   @endforeach
                 </tbody>

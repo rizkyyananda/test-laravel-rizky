@@ -18,4 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::controller(CustomerController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store');
+    Route::delete('/{customer}', 'destroy')->name('customers.destroy');
+    Route::delete('/{customer}/families/{family}', 'familyDestroy')->name('families.destroy');
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\FamilyList;
 use App\Models\Nationality;
 use Exception;
 use Illuminate\Http\Request;
@@ -131,6 +132,37 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        try {
+            // Hapus semua familyList terkait
+            $customer->familyLists()->delete();
+
+            // Hapus customer
+            $customer->delete();
+
+            return redirect()->route('index')
+                            ->with('success', 'Customer dan data keluarga berhasil dihapus.');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return redirect()->route('index')
+                            ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
     }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return \Illuminate\Http\Response
+     */
+    public function familyDestroy(Customer $customer, FamilyList $family)
+    {
+        if ($family->customer_id !== $customer->id) {
+            abort(404);
+        }
+
+        $family->delete();
+
+        return back()->with('success', 'Data keluarga berhasil dihapus.');
+    }
+
 }
